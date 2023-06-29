@@ -49,7 +49,7 @@ func main() {
 	router.POST("/add", addUser)
 	router.PUT("/update/:id", updateUser)
 
-	router.Run("localhost:3001")
+	router.Run(":3001")
 }
 
 func getUsers(c *gin.Context) {
