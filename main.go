@@ -122,10 +122,25 @@ func updateUser(c *gin.Context) {
 	}
 
 	for i, user := range users {
-		if user.ID == id {
+		//Only if name is changed
+		if user.ID == id && user.Email == newUser.Email {
+			users[i].FirstName = newUser.FirstName
+			c.IndentedJSON(http.StatusOK, gin.H{
+				"message": "User updated",
+				"success": true,
+			})
+			return
+			//Both email and name are changed
+		} else if user.ID == id && user.Email != newUser.Email {
+			// Check if email already exists
+			for _, usr := range users {
+				if usr.Email == newUser.Email {
+					c.IndentedJSON(http.StatusConflict, gin.H{"message": "Email already exists", "success": false})
+					return
+				}
+			}
 			users[i].Email = newUser.Email
 			users[i].FirstName = newUser.FirstName
-
 			c.IndentedJSON(http.StatusOK, gin.H{
 				"message": "User updated",
 				"success": true,
